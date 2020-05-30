@@ -1,3 +1,7 @@
+Basic Messenger like in React got currently only rly essential features
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
