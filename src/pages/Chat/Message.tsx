@@ -1,43 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { Input, Button } from "antd";
 import { SendOutlined } from "@ant-design/icons";
-import { db } from "../../services/firebase";
-
-const onEnterPress = (
-  e: any,
-  setMessage: any,
-  message: string,
-  combinedUid: string,
-  userId: string
-) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    sendMessage(message, combinedUid, userId);
-    setMessage("");
-  }
-};
-
-const sendMessage = async (
-  message: string,
-  combinedUid: string,
-  userId: string
-) => {
-  if (!message.length) return null;
-  try {
-    const req = await db.ref("chats/" + combinedUid).push({
-      message: message,
-      timestamp: Date.now(),
-      uid: userId
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
+import onEnterPress from "../../helpers/onEnterPress";
+import sendMessage from "../../helpers/SendMessage";
 
 const Message = ({ chat, combinedUid, user, selectedUser }: any) => {
   const [message, setMessage] = useState("");
 
+  const botRef = createRef<HTMLLIElement>();
+
+  //scrollDown on New message
+
+  useEffect(() => {
+    if (botRef.current !== null) {
+      console.log("scroosa;p[e");
+      botRef.current.scrollIntoView({
+        block: "start",
+        behavior: "smooth"
+      });
+    }
+  }, [chat]);
+
   if (!selectedUser || !user) return <div className="loader">Loading...</div>;
+
   return (
     <div className="message">
       <div className="send-message">
@@ -45,7 +30,10 @@ const Message = ({ chat, combinedUid, user, selectedUser }: any) => {
           value={message}
           onChange={e => setMessage(e.currentTarget.value)}
           onKeyPress={e => {
-            onEnterPress(e, setMessage, message, combinedUid, user.uid);
+            onEnterPress(e, () => {
+              sendMessage(message, combinedUid, user.uid);
+              setMessage("");
+            });
           }}
           placeholder="Écrivez un message..."
           className="input"
@@ -62,8 +50,7 @@ const Message = ({ chat, combinedUid, user, selectedUser }: any) => {
       </div>
       <ol className="message-box">
         {chat.map((message: any, key: number) => {
-          let who = "other";
-          if (message.uid === user.uid) who = "self";
+          let who = message.uid === user.uid ? "self" : "other";
           return (
             <li className={who} key={key}>
               <div></div>
@@ -71,6 +58,7 @@ const Message = ({ chat, combinedUid, user, selectedUser }: any) => {
             </li>
           );
         })}
+        <li className="scrollTo" ref={botRef}></li>
       </ol>
       <div className="head">
         <div className="title">{selectedUser.usermame}</div>
