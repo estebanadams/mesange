@@ -1,6 +1,6 @@
 Basic Messenger like in React got currently only rly essential features
 
-Live demo can be seen here [Mesange](https://app.netlify.com/sites/friendly-dijkstra-86e2e7/deploys).
+Live demo can be seen here [Mesange](https://friendly-dijkstra-86e2e7.netlify.app/).
 
 ![](readme/img/Screenshot%20from%202020-05-31%2000-33-51.png)
 
